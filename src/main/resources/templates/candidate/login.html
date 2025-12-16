@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Candidato</title>
+</head>
+<body class="bg-gray-900 text-white h-screen w-full">
+  <section class="flex flex-col h-full justify-center items-center">
+    <h2 class="text-4xl font-semibold text-center pt-12">
+      Plataforma de Vagas
+    </h2>
+    <div class="flex flex-col justify-center items-center h-full">
+      <form action="" method="post" th:action="@{/candidate/signIn}">
+        <div>
+          <h3 class="text-2xl">Login do Candidato</h3>
+        </div>
+        <div class="flex flex-col gap-4 mt-8">
+          <label for="username">E-mail</label>
+          <input type="text" id="username" name="username" placeholder="Usuário"
+            class="bg-transparent border-b border-white focus:outline-none focus:border-red-500 
+            pb-2 text-lg w-96"
+          >
+    
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" placeholder="Senha"
+            class="bg-transparent border-b border-white focus:outline-none focus:border-red-500 
+            pb-2 text-lg w-96"
+          >
+
+          <p class="text-red-400" th:if="${error_message}" th:text="${error_message}"></p>
+    
+          <button type="submit" 
+            class="text-center bg-red-600 rounded-lg px-8 py-4 hover:bg-red-700 transition-colors 
+            mt-6 font-semibold text-xl"
+          >
+            Entrar
+          </button>
+          <span class="flex justify-center">Ainda não tem uma conta?</span>
+          <a href="" target="_blank" rel="noopener noreferrer"
+            class="text-white/70 text-xl underline underline-offset-4 hover:text-white/50 text-center"
+          >
+            Crie sua conta
+          </a>
+        </div>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
