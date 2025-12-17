@@ -4,9 +4,39 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile | Candidato</title>
+  <title>Perfil | Candidato</title>
 </head>
 <body class="bg-gray-900 text-white h-screen w-full">
-  <p>Área do Perfil</p>
+  <nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center">
+        <div class="flex gap-10">
+          <a href="/candidate/profile" target="_blank" rel="noopener noreferrer" class="hover:text-white/70">
+            Perfil do Candidato
+          </a>
+          <a href="/candidate/jobs" target="_blank" rel="noopener noreferrer" class="hover:text-white/70">
+            Vagas Disponíveis
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="flex px-40 py-20 justify-center">
+    <div class="grid bg-gray-800 w-6/12 columns-1 grid-cols-1 p-10 rounded justify-between gap-4">
+      <div class="flex justify-between w-full">
+        <span class="text-base text-gray-300 font-bold">Nome: </span>
+        <span class="text-base text-gray-200">John Doe</span>
+      </div>
+      <div class="flex justify-between w-full">
+        <span class="text-base text-gray-300 font-bold">Usuário: </span>
+        <span class="text-base text-gray-200">john_doeeeee</span>
+      </div>
+      <div class="flex justify-between w-full">
+        <span class="text-base text-gray-300 font-bold">E-mail: </span>
+        <span class="text-base text-gray-200">john.doeeeee@example.com</span>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
