@@ -8,10 +8,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.ProfileUserDTO;
+
 @Service
 public class ProfileCandidateService {
 
-  public String execute(String token) {
+  public ProfileUserDTO execute(String token) {
 
     RestTemplate rt = new RestTemplate();
 
@@ -23,7 +25,7 @@ public class ProfileCandidateService {
     var result = rt.exchange("http://localhost:8080/candidate/",
         HttpMethod.GET,
         request,
-        String.class);
+        ProfileUserDTO.class);
 
     return result.getBody();
   }
