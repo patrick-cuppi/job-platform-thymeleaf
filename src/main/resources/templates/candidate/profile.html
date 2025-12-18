@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil | Candidato</title>
+</head>
+<body class="bg-gray-900 text-white h-screen w-full">
+  <nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center">
+        <div class="flex gap-10">
+          <a href="/candidate/profile" target="_blank" rel="noopener noreferrer" class="hover:text-white/70">
+            Perfil do Candidato
+          </a>
+          <a href="/candidate/jobs" target="_blank" rel="noopener noreferrer" class="hover:text-white/70">
+            Vagas Disponíveis
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="flex px-40 py-20 justify-center">
+    <div class="grid bg-gray-800 w-6/12 columns-1 grid-cols-1 p-10 rounded-lg justify-between gap-4">
+      <h2 class="text-2xl font-bold">
+        Perfil do Candidato
+      </h2>
+      <form th:object="${user}">
+        <div class="flex justify-between w-full">
+          <span class="text-base text-gray-300 font-bold">Nome: </span>
+          <span class="text-base text-gray-200" th:text="${user.name}"></span>
+          </div>
+          <div class="flex justify-between w-full">
+            <span class="text-base text-gray-300 font-bold">Usuário: </span>
+          <span class="text-base text-gray-200" th:text="${user.username}"></span>
+          </div>
+          <div class="flex justify-between w-full">
+            <span class="text-base text-gray-300 font-bold">E-mail: </span>
+          <span class="text-base text-gray-200" th:text="${user.email}"></span>
+          </div>
+        <div class="flex justify-between w-full">
+          <span class="text-base text-gray-300 font-bold">Descrição: </span>
+          <span class="text-base text-gray-200" th:text="${user.description}"></span>
+        </div>
+        </form>
+    </div>
+  </div>
+</body>
+</html>
