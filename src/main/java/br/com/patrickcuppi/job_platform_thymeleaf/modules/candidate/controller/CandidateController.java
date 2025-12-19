@@ -1,5 +1,7 @@
 package br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,10 +14,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.CreateCandidateDTO;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ApplyJobService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CandidateService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CreateCandidateService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.FindJobsService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ProfileCandidateService;
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +35,15 @@ public class CandidateController {
 
   @Autowired
   private ProfileCandidateService profileCandidateService;
+
+  @Autowired
+  private FindJobsService findJobsService;
+
+  @Autowired
+  private ApplyJobService applyJobService;
+
+  @Autowired
+  private CreateCandidateService createCandidateService;
 
   @GetMapping("/login")
   public String login() {
@@ -65,12 +81,63 @@ public class CandidateController {
   @PreAuthorize("hasRole('CANDIDATE')")
   public String profile(Model model) {
 
+    try {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+      var user = this.profileCandidateService.execute(authentication.getDetails().toString());
+
+      model.addAttribute("user", user);
+
+      return "candidate/profile";
+    } catch (HttpClientErrorException e) {
+      return "redirect:/candidate/login";
+    }
+  }
+
+  @GetMapping("/jobs")
+  @PreAuthorize("hasRole('CANDIDATE')")
+  public String jobs(Model model, String filter) {
+
+    try {
+      if (filter != null) {
+        var jobs = this.findJobsService.execute(getToken(), filter);
+        model.addAttribute("jobs", jobs);
+      }
+
+    } catch (HttpClientErrorException e) {
+      return "redirect:/candidate/login";
+    }
+
+    return "candidate/jobs";
+  }
+
+  @PostMapping("/jobs/apply")
+  @PreAuthorize("hasRole('CANDIDATE')")
+  public String applyJob(@RequestParam("jobId") UUID jobId) {
+
+    this.applyJobService.execute(getToken(), jobId);
+
+    return "redirect:/candidate/jobs";
+  }
+
+  @GetMapping("/create")
+  public String create(Model model) {
+    model.addAttribute("candidate", new CreateCandidateDTO());
+    return "candidate/create";
+  }
+
+  @PostMapping("/create")
+  public String save(CreateCandidateDTO candidate, Model model) {
+
+    this.createCandidateService.execute(candidate);
+
+    model.addAttribute("candidate", candidate);
+
+    return "candidate/create";
+  }
+
+  private String getToken() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    var user = this.profileCandidateService.execute(authentication.getDetails().toString());
-
-    model.addAttribute("user", user);
-
-    return "candidate/profile";
+    return authentication.getDetails().toString();
   }
 }
