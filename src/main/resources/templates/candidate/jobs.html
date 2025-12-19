@@ -38,22 +38,24 @@
       </button>
     </form>
 
-    <div th:if="${jobs != null}" class="mt-10 w-full max-w-md">
-      <ul class="space-y-6">
-        <li th:each="job : ${jobs}" class="p-6 bg-gray-800 rounded-lg shadow-md">
-          <p th:text="${job.description}"></p>
-          <p th:text="${job.benefits}"></p>
-          <p th:text="${job.level}"></p>
-          <p th:text="${job.companyId}"></p>
-          <p th:text="${#dates.format(job.createdAt, 'dd/MM/yyyy')}"></p>
-        </li>
-      </ul>
-      <button type="submit" class="mt-4 px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 focus:outline-none 
-        focus:ring-2 focus:ring-red-500"
-      >
-        Aplicar
-      </button>
-    </div>
+    <form th:action="@{/candidate/jobs/apply}" method="post">
+      <div th:if="${jobs != null}" class="mt-10 w-full max-w-md justify-center items-center">
+        <input type="hidden" name="jobId" th:value="${job.id}" />
+        <ul class="space-y-6">
+          <li th:each="job : ${jobs}" class="p-6 bg-gray-800 rounded-lg shadow-md">
+            <p th:text="${job.description}"></p>
+            <p th:text="${job.benefits}"></p>
+            <p th:text="${job.level}"></p>
+            <p th:text="${job.companyId}"></p>
+            <p th:text="${#dates.format(job.createdAt, 'dd/MM/yyyy')}"></p>
+          </li>
+        </ul>
+        <button type="submit" class="mt-4 px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 focus:outline-none 
+                  focus:ring-2 focus:ring-red-500">
+          Aplicar
+        </button>
+        </div>
+    </form>
   </div>
 </body>
 </html>
