@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CandidateService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.FindJobsService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ProfileCandidateService;
 import jakarta.servlet.http.HttpSession;
 
@@ -28,6 +29,9 @@ public class CandidateController {
 
   @Autowired
   private ProfileCandidateService profileCandidateService;
+
+  @Autowired
+  private FindJobsService findJobsService;
 
   @GetMapping("/login")
   public String login() {
@@ -65,12 +69,38 @@ public class CandidateController {
   @PreAuthorize("hasRole('CANDIDATE')")
   public String profile(Model model) {
 
+    try {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+      var user = this.profileCandidateService.execute(authentication.getDetails().toString());
+
+      model.addAttribute("user", user);
+
+      return "candidate/profile";
+    } catch (HttpClientErrorException e) {
+      return "redirect:/candidate/login";
+    }
+  }
+
+  @GetMapping("/jobs")
+  @PreAuthorize("hasRole('CANDIDATE')")
+  public String jobs(Model model, String filter) {
+
+    try {
+      if (filter != null) {
+        var jobs = this.findJobsService.execute(getToken(), filter);
+        model.addAttribute("jobs", jobs);
+      }
+
+    } catch (HttpClientErrorException e) {
+      return "redirect:/candidate/login";
+    }
+
+    return "candidate/jobs";
+  }
+
+  private String getToken() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    var user = this.profileCandidateService.execute(authentication.getDetails().toString());
-
-    model.addAttribute("user", user);
-
-    return "candidate/profile";
+    return authentication.getDetails().toString();
   }
 }
