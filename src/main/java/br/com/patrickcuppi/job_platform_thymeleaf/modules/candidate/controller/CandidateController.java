@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.CreateCandidateDTO;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ApplyJobService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CandidateService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CreateCandidateService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.FindJobsService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ProfileCandidateService;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +41,9 @@ public class CandidateController {
 
   @Autowired
   private ApplyJobService applyJobService;
+
+  @Autowired
+  private CreateCandidateService createCandidateService;
 
   @GetMapping("/login")
   public String login() {
@@ -113,6 +118,22 @@ public class CandidateController {
     this.applyJobService.execute(getToken(), jobId);
 
     return "redirect:/candidate/jobs";
+  }
+
+  @GetMapping("/create")
+  public String create(Model model) {
+    model.addAttribute("candidate", new CreateCandidateDTO());
+    return "candidate/create";
+  }
+
+  @PostMapping("/create")
+  public String save(CreateCandidateDTO candidate, Model model) {
+
+    this.createCandidateService.execute(candidate);
+
+    model.addAttribute("candidate", candidate);
+
+    return "candidate/create";
   }
 
   private String getToken() {
