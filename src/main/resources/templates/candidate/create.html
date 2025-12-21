@@ -56,7 +56,8 @@
           <p class="text-red-400" id="error-message" style="display: none;">
             As senhas não coincidem. Por favor, tente novamente.
           </p>
-    
+
+          <p class="text-red-400" th:text="${error_message}" th:if="${error_message}"></p>
           <button type="submit" 
             class="text-center mx-auto w-[300px] bg-red-600 rounded-lg px-8 py-4 hover:bg-red-700 transition-colors 
             mt-6 font-semibold text-xl"
