@@ -24,6 +24,7 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.Cand
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.CreateCandidateService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.FindJobsService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service.ProfileCandidateService;
+import br.com.patrickcuppi.job_platform_thymeleaf.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -129,8 +130,13 @@ public class CandidateController {
   @PostMapping("/create")
   public String save(CreateCandidateDTO candidate, Model model) {
 
-    this.createCandidateService.execute(candidate);
+    try {
+      this.createCandidateService.execute(candidate);
 
+    } catch (HttpClientErrorException e) {
+      model.addAttribute("error_message",
+          FormatErrorMessage.formatErrorMessage(e.getResponseBodyAsString()));
+    }
     model.addAttribute("candidate", candidate);
 
     return "candidate/create";
