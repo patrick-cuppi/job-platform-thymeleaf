@@ -19,6 +19,7 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.dto.CreateComp
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.dto.CreateJobsDTO;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.CreateCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.CreateJobService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.ListAllJobsCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.LoginCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +36,9 @@ public class CompanyController {
 
   @Autowired
   private CreateJobService createJobService;
+
+  @Autowired
+  private ListAllJobsCompanyService listAllJobsCompanyService;
 
   @GetMapping("/create")
   public String create(Model model) {
@@ -102,6 +106,16 @@ public class CompanyController {
   public String createJobs(CreateJobsDTO jobs) {
     this.createJobService.execute(jobs, getToken());
     return "redicrect:/company/jobs";
+  }
+
+  @GetMapping("/jobs/list")
+  @PreAuthorize("hasRole('COMPANY')")
+  public String jobsList(Model model) {
+
+    var result = this.listAllJobsCompanyService.execute(getToken());
+
+    model.addAttribute("jobs", result);
+    return "company/list";
   }
 
   private String getToken() {
