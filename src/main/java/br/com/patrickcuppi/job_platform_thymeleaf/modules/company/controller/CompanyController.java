@@ -19,6 +19,7 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.dto.CreateComp
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.dto.CreateJobsDTO;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.CreateCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.CreateJobService;
+import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.ListAllJobsCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service.LoginCompanyService;
 import br.com.patrickcuppi.job_platform_thymeleaf.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +36,9 @@ public class CompanyController {
 
   @Autowired
   private CreateJobService createJobService;
+
+  @Autowired
+  private ListAllJobsCompanyService listAllJobsCompanyService;
 
   @GetMapping("/create")
   public String create(Model model) {
@@ -101,7 +105,28 @@ public class CompanyController {
   @PreAuthorize("hasRole('COMPANY')")
   public String createJobs(CreateJobsDTO jobs) {
     this.createJobService.execute(jobs, getToken());
-    return "redicrect:/company/jobs";
+    return "redicrect:/company/jobs/list";
+  }
+
+  @GetMapping("/jobs/list")
+  @PreAuthorize("hasRole('COMPANY')")
+  public String jobsList(Model model) {
+
+    var result = this.listAllJobsCompanyService.execute(getToken());
+
+    model.addAttribute("jobs", result);
+    return "company/list";
+  }
+
+  @GetMapping("/logout")
+  public String logout(HttpSession session) {
+
+    SecurityContextHolder.getContext().setAuthentication(null);
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+    session.setAttribute("token", null);
+
+    return "redirect:/company/login";
   }
 
   private String getToken() {

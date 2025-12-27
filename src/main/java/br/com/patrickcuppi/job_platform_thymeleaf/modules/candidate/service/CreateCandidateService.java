@@ -1,5 +1,6 @@
 package br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,9 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.CreateCa
 @Service
 public class CreateCandidateService {
 
+  @Value("${hostApiJobPlatform}")
+  private String hostApiJobPlatform;
+
   public void execute(CreateCandidateDTO candidate) {
 
     try {
@@ -23,8 +27,10 @@ public class CreateCandidateService {
 
       HttpEntity<CreateCandidateDTO> request = new HttpEntity<>(candidate, headers);
 
-      var result = rt.postForObject(
-          "http://localhost:8080/candidate/",
+      var url = hostApiJobPlatform.concat("/candidate/");
+    
+      rt.postForObject(
+          url,
           request,
           String.class);
     } catch (HttpClientErrorException e) {
