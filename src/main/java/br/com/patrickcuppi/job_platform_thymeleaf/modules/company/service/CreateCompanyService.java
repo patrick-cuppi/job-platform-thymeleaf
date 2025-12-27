@@ -1,5 +1,6 @@
 package br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,6 +12,9 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.company.dto.CreateComp
 @Service
 public class CreateCompanyService {
 
+  @Value("${hostApiJobPlatform}")
+  private String hostApiJobPlatform;
+
   public String execute(CreateCompanyDTO createCompanyDTO) {
 
     RestTemplate rt = new RestTemplate();
@@ -20,7 +24,9 @@ public class CreateCompanyService {
 
     HttpEntity<CreateCompanyDTO> request = new HttpEntity<>(createCompanyDTO, headers);
 
-    return rt.postForObject("http://localhost:8080/company/", request, String.class);
+    var url = hostApiJobPlatform.concat("/company/");
+
+    return rt.postForObject(url, request, String.class);
 
   }
 }

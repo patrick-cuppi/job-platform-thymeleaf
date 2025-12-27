@@ -2,6 +2,7 @@ package br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.service;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,9 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.ProfileU
 @Service
 public class ProfileCandidateService {
 
+  @Value("${hostApiJobPlatform}")
+  private String hostApiJobPlatform;
+
   public ProfileUserDTO execute(String token) {
 
     RestTemplate rt = new RestTemplate();
@@ -25,9 +29,11 @@ public class ProfileCandidateService {
 
     HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
 
+    var url = hostApiJobPlatform.concat("/candidate/");
+
     try {
-      var result = rt.exchange("http://localhost:8080/candidate/",
-            HttpMethod.GET,
+      var result = rt.exchange(url,
+                HttpMethod.GET,
         request,
         ProfileUserDTO.class);
 

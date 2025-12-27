@@ -2,6 +2,7 @@ package br.com.patrickcuppi.job_platform_thymeleaf.modules.company.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,9 @@ import br.com.patrickcuppi.job_platform_thymeleaf.modules.candidate.dto.JobDTO;
 
 @Service
 public class ListAllJobsCompanyService {
+
+  @Value("${hostApiJobPlatform}")
+  private String hostApiJobPlatform;
 
   public List<JobDTO> execute(String token) {
 
@@ -26,7 +30,9 @@ public class ListAllJobsCompanyService {
     ParameterizedTypeReference<List<JobDTO>> responseType = new ParameterizedTypeReference<List<JobDTO>>() {
     };
 
-    var result = rt.exchange("http://localhost:8080/company/job/", HttpMethod.GET, entity, responseType);
+    var url = hostApiJobPlatform.concat("/company/job/");
+
+    var result = rt.exchange(url, HttpMethod.GET, entity, responseType);
     return result.getBody();
   }
 }
